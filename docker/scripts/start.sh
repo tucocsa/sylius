@@ -249,11 +249,13 @@ if [ -z "$SKIP_COMPOSER" ]; then
     fi
 fi
 
-#chown -R sylius:www-data /var/www/sylius
-find /var/www/sylius -type f -exec chmod 664 {} \;
-find /var/www/sylius -type d -exec chmod 775 {} \;
-chgrp -R www-data /var/www/sylius/var/cache /var/www/sylius/var/logs
-chmod -R ug+rwx /var/www/sylius/var/cache /var/www/sylius/var/logs
+# Set correct permissions
+chgrp -R nginx /var/www/html/sylius
+chown -R sylius:nginx /var/www/html/sylius
+find /var/www/html/sylius -type f -exec chmod 664 {} \;
+find /var/www/html/sylius -type d -exec chmod 775 {} \;
+chown -R sylius:nginx /var/www/html/sylius/var/logs
+chown -R sylius:nginx /var/www/html/sylius/var/cache
 
 # Start supervisord and services
 exec /usr/bin/supervisord -n -c /etc/supervisord.conf

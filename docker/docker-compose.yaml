@@ -4,22 +4,28 @@ services:
   sylius:
     container_name: ${NAME}-web
 #    image: navidonskis/nginx-php7.1
-    build: .
+    build:
+        context: .
+        args:
+          - ENABLE_XDEBUG=${ENABLE_XDEBUG}
     environment:
       - SYLIUS_DATABASE_HOST=mysql
       - SYLIUS_DATABASE_USER=sylius
       - SYLIUS_DATABASE_PASSWORD=sylius
       - SYLIUS_MAILER_HOST=mailhog:1025
       - SYLIUS_APP_DEV_PERMITTED=1
+#      - USER=${USER}
+#      - PUID=${USER}
+#      - PGID=${USER}
     ports:
       - 8000:80
     volumes:
-      - ./sylius:/var/www/sylius
+      - ./../project:/var/www/html/sylius
       - ./conf/nginx/nginx.conf:/etc/nginx/sites-available/default.conf
       - ./conf/php/docker-vars.ini:/usr/local/etc/php/conf.d/docker-vars.ini
       - ./conf/php/www.conf:/usr/local/etc/php-fpm.d/www.conf
     restart: always
-    working_dir: /var/www
+    working_dir: /var/www/html/sylius
 
   mysql:
     container_name: ${NAME}-mysql
@@ -31,6 +37,8 @@ services:
       MYSQL_PASSWORD: sylius
     ports:
       - 127.0.0.1:3606:3306
+    volumes:
+      - "${DB_PATH}:/var/lib/mysql"
 
   mailhog:
     container_name: ${NAME}-mailhog
