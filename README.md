@@ -22,6 +22,7 @@ Initial setting
 docker-compose exec -u sylius sylius bash
 yarn install
 php bin/console sylius:install:database // Answers [YES]
+yarn run gulp
 ```
 
 Go to `http://localhost:8000` Make sure everything is ok.
